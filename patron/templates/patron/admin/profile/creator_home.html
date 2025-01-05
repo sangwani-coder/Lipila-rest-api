@@ -6,6 +6,7 @@
 {% block title %} Support {{creator.patron_title}} on Luso | Exclusive Content & More {% endblock %}
 
 {% block extrastylesheets %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link href="{% static 'file_manager/css/style.css' %}" rel="stylesheet">
 {% if not user.is_authenticated %}
 <link href="{% static 'assets/css/header.css' %}" rel="stylesheet">
@@ -13,6 +14,7 @@
 {% endblock extrastylesheets %}
 
 {% block section %}
+<script src="http://localhost:8000/static/lipila_sdk/lipila_sdk.js"></script>
 {% include 'lipila/modals/loader.html' %}
 {% include 'reusables/_modal.html' %}
 {% include "lipila/modals/_confirmation_payment.html" %}
@@ -33,6 +35,7 @@
             </div>
             {% if creator.is_verified %}
             <span class="badge badge-success">Verified</span>
+            
             {% endif %}
             <span class="category">{{creator.creator_category}}</span>
             <span class="name mt-3">@{{creator.patron_title}}</span>
@@ -53,13 +56,13 @@
                 {% endif %}
                 {% for tier in tiers %}
                 {% if tier.visible_to_fans %}
-
                 <div class="tier-card">
                     <div class="tier-texts">
                         <h5 class="title">{{ tier.name }}</h5>
                         <span class="price">K{{ tier.price }}/Onetime</span>
                         <p class="description">{{ tier.description }}</p>
                     </div>
+                    
                     <div class="">
                         <form action="{% url 'checkout_momo' creator.patron_title %}" method="get">
                             {% csrf_token %}
@@ -68,7 +71,9 @@
 
                             <input type="hidden" value="{{creator.user}}" id="creator">
                             <input type="hidden" value="{{request.user}}" id="user">
-                            <button id="support" class="btn-get-started" name="button">Support</button>
+                            <button class="" type="button" data-toggle="modal" data-target="#paymentModal">
+                                Support Me
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -93,38 +98,20 @@
         class="bi bi-arrow-up-short"></i></a>
 {% endblock section %}
 {% block extrascripts %}
+
 <script>
-    // Checkout js code
     document.addEventListener('DOMContentLoaded', function () {
-        var supportBtn = document.querySelector('#support');
+        const apiKey = "65b9a9ce-3511-417e-8bf0-3af4ce8d3d38";
+        const appId = "100000";
 
-        supportBtn.addEventListener('click', function () {
+        const sdk = new LipilaSDK("http://localhost:8000/lipila_sdk/submit_bill_collection/");
+        sdk.renderForm("lipila-form-container");
 
-            var tierId = document.querySelector("#creator").value;
-            // const formData = new FormData();
-            // formData.append('tier_id', tierId);  // Example form data
-            // formData.append('msisdn', '123456789');  // Example form data
+        document.getElementById("lipila-form").elements["appId"].value = appId;
+        document.getElementById("lipila-form").elements["apiKey"].value = apiKey;
 
-
-            var paymentData = {
-                tier_id: tierId
-            }
-
-            fetch('http://192.168.0.190:8000/checkout/lpa/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken') // Include CSRF token for Django
-                },
-                body: JSON.stringify(paymentData)
-            })
-                .then(function () {
-                    console.log('success');
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        });
+        var formTitle = document.getElementById('title').innerHTML = 'Pay with Lipila';
+                
     });
 </script>
 

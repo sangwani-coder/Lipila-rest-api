@@ -1,0 +1,194 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+  }
+  
+  .admin-other-body {
+    padding: 20px;
+  }
+  
+  .creator-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header Styles */
+  .dashboard-header h1 {
+    font-size: 28px;
+    color: #333333;
+    margin-bottom: 10px;
+  }
+  
+  .dashboard-header p {
+    font-size: 16px;
+    color: #666666;
+  }
+  
+  /* Summary Cards */
+  .dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .summary-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .summary-card h3 {
+    font-size: 24px;
+    color: #4CAF50;
+    margin: 10px 0;
+  }
+  
+  .summary-card p {
+    font-size: 16px;
+    color: #333333;
+  }
+  
+  /* Card Icons */
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 24px;
+  }
+  
+  .balance-icon {
+    background-color: #4CAF50;
+  }
+  
+  .payments-icon {
+    background-color: #2196F3;
+  }
+  
+  .withdrawals-icon {
+    background-color: #FF9800;
+  }
+  
+  .patrons-icon {
+    background-color: #9C27B0;
+  }
+  
+  .tiers-icon {
+    background-color: #F44336;
+  }
+  
+  /* Patron URL Section */
+  .url-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .url-box p {
+    font-size: 16px;
+    color: #555555;
+    word-wrap: break-word;
+  }
+  
+  .copy-btn {
+    padding: 8px 16px;
+    background-color: #2196F3;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .copy-btn:hover {
+    background-color: #1976D2;
+  }
+  
+  /* Recent Activity */
+  .dashboard-section {
+    margin-top: 30px;
+  }
+  
+  .dashboard-section h3 {
+    font-size: 20px;
+    color: #333333;
+    margin-bottom: 15px;
+  }
+  
+  .activity-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .activity-list li {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: #555555;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .activity-date {
+    font-weight: bold;
+    color: #4CAF50;
+  }
+  
+  /* Chart Section */
+  .chart-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+  }
+  
+  /* Footer */
+  .dashboard-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #888888;
+  }
+  
+  .dashboard-footer span {
+    font-weight: bold;
+    color: #4CAF50;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-summary {
+      grid-template-columns: 1fr;
+    }
+  
+    .url-box {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  

@@ -296,7 +296,7 @@ def signup_view(request):
             user.email_user(subject, message)
             return redirect('accounts:activation_sent')
         else:
-            messages.error(request, "Invalid form fields.")
+            messages.error(request, form.errors)
             form = SignUpForm()
             return render(request, 'registration/signup.html', {'form': form})
 
@@ -314,7 +314,7 @@ def custom_login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                if user.has_group or user.is_staff:
+                if user.creatorprofile or user.is_staff:
                     messages.success(
                         request, f"Welcome back, {user.username}!")
                     return redirect(next_url)

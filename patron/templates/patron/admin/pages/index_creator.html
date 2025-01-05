@@ -1,50 +1,109 @@
 {% extends 'layout_admin.html' %}
-{% load static%}
+{% load static %}
 {% load custom_filters %}
 {% block title %}Dashboard{% endblock %}
 
+{% block extrastylesheets %}
+<link href="{% static 'assets/css/creator.css' %}" rel="stylesheet">
+{% endblock extrastylesheets %}
 {% block section %}
 <section class="admin-other-body">
   <div class="creator-dashboard">
 
-    <div class="creator-footer">
-      Summary
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>Welcome {{user.username}}</h1>
+      <p>Track your progress, manage your patrons, and grow your community.</p>
     </div>
-    <div class="creator-stats">
-      <div class="creator-stat">
-        <h3>K<span id="current-balance">{{summary.balance | comma_format }}</span></h3>
+
+    <!-- Summary Cards -->
+    <div class="dashboard-summary">
+      <div class="summary-card">
+        <div class="card-icon balance-icon"></div>
+        <h3>K<span>{{ summary.balance | comma_format }}</span></h3>
         <p>Balance</p>
       </div>
-      <div class="creator-stat">
-        <h3>K<span id="total-payments">{{summary.total_payments | comma_format }}</span></h3>
+      <div class="summary-card">
+        <div class="card-icon payments-icon"></div>
+        <h3>K<span>{{ summary.total_payments | comma_format }}</span></h3>
         <p>Receipts</p>
       </div>
-      <div class="creator-stat">
-        <h3>K<span id="withdrawn-total">{{summary.withdrawals | comma_format }}</span></h3>
+      <div class="summary-card">
+        <div class="card-icon withdrawals-icon"></div>
+        <h3>K<span>{{ summary.withdrawals | comma_format }}</span></h3>
         <p>Cashouts</p>
       </div>
-      <div class="creator-stat">
-        <h3><span id="totals">{{summary.patrons}}</span></h3>
+      <div class="summary-card">
+        <div class="card-icon patrons-icon"></div>
+        <h3><span>{{ summary.patrons }}</span></h3>
         <p>Patrons</p>
       </div>
-      <div class="creator-stat">
-        <h3><span id="totals">{{summary.tiers}}</span></h3>
+      <div class="summary-card">
+        <div class="card-icon tiers-icon"></div>
+        <h3><span>{{ summary.tiers }}</span></h3>
         <p>Tiers</p>
       </div>
     </div>
-    <div class="creator-footer">
-      <p class="tier-url">My Patron URL: {{ url }}</p>
-      <span class="tier-url" data-url="{{ url }}">
-         <button class="copy-btn" data-clipboard-text="{{ url }}">
-          <h5>Copy</h5>
-        </button>
-      </span>
+
+    <!-- Patron URL -->
+    <div class="dashboard-section">
+      <h3>Patron URL</h3>
+      <div class="url-box">
+        <p>{{ url }}</p>
+        <button class="copy-btn" data-clipboard-text="{{ url }}">Copy</button>
+      </div>
     </div>
-    <div class="creator-footer">
-      Last updated: <span id="last-updated">{{summary.updated_at}}</span>
+
+    <!-- Recent Activity -->
+    <div class="dashboard-section">
+      <h3>Recent Activity</h3>
+      <ul class="activity-list">
+        <li><span class="activity-date">12 Dec 2024</span> - Received payment of K500 from Patron A</li>
+        <li><span class="activity-date">10 Dec 2024</span> - Cashout request for K1000 approved</li>
+        <li><span class="activity-date">08 Dec 2024</span> - New patron joined your K50 tier</li>
+      </ul>
+    </div>
+
+    <!-- Growth Chart (Placeholder) -->
+    <div class="dashboard-section">
+      <h3>Growth Overview</h3>
+      <div class="chart-container">
+        <canvas id="growth-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="dashboard-footer">
+      <p>Last updated: <span>{{ summary.updated_at }}</span></p>
     </div>
   </div>
-
 </section>
+
+<!-- JavaScript for Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('growth-chart').getContext('2d');
+  const growthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Example data
+      datasets: [{
+        label: 'Earnings (K)',
+        data: [500, 800, 1200, 1500, 2000, 2500], // Example data
+        borderColor: '#4CAF50',
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        }
+      }
+    }
+  });
+</script>
 
 {% endblock %}

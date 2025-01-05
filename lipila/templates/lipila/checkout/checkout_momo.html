@@ -8,232 +8,61 @@
 {% endblock extrastylesheets %}
 
 {% block section %}
+<script src="http://localhost:8000/static/lipila_sdk/lipila_sdk.js"></script>
 
-<script src="https://js.braintreegateway.com/web/dropin/1.43.0/js/dropin.js"></script>
 
 <div class="checkout-container">
     <div class="checkout-txt">
         <h5>Support {{payee}}</h5>
-        <h3>Select Payment Method:</h3>
+    </div>
+    {% include 'reusables/_modal.html' %}    
     </div>
 
     <div class="logo-buttons">
         <button class="payment-button" id="mtn-button">
             <img src="{% static 'assets/img/api/mtn.png' %}" alt="MTN">
         </button>
-        <button class="payment-button" id="airtel-button">
-            <img src="{% static 'assets/img/api/airtel.png' %}" alt="Airtel">
-        </button>
-        <!-- <button class="payment-button" id="visa-button">
-            <img src="{% static 'assets/img/api/visa.png' %}" alt="Visa">
-        </button> -->
-        <input type="hidden" value="{{client_token}}" id="clientToken">
     </div>
-
-
-    <!-- Modals -->
-    <div id="mtn-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-mtn-modal">&times;</span>
-            <div class="checkout-header">
-                <p>Pay with MTN</p>
-                <img src="{% static 'assets/img/api/mtn.png' %}" alt="MTN logo">
-            </div>
-            {% include 'lipila/modals/pay_support_mtn.html' %}
-        </div>
-    </div>
-
-    <div id="airtel-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-airtel-modal">&times;</span>
-            <br>
-            <div class="checkout-header">
-                <p>Pay with Airtel</p>
-                <img src="{% static 'assets/img/api/airtel.png' %}" alt="airtel logo">
-            </div>
-            {% include 'lipila/modals/pay_support_airtel.html' %}
-        </div>
-    </div>
-
-    <div id="visa-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-visa-modal">&times;</span>
-            <!-- add braintree dropin UI -->
-            <div id="dropin-container"></div>
-            <button id="submit-button" class="button button--small button--green">Submit</button>
-        </div>
-    </div>
+    <button class="btn-withdraw" type="button" data-toggle="modal" data-target="#paymentModal">
+                Collect Payment
+            </button>
 
 </div>
 {% endblock section %}
 {% block extrascripts %}
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const amountButtons = document.querySelectorAll('.amount-btn');
-        const customInput = document.getElementById('custom');
-        const contributionCheckbox = document.getElementById('add-contribution');
-        const totalAmountDisplay = document.getElementById('total-amount');
-        
-        let selectedAmount = 25;  // Default amount
-        const contributionAmount = 2.5;
+        const apiKey = "65b9a9ce-3511-417e-8bf0-3af4ce8d3d38";
+        const appId = "100000";
 
-        
-        // Function to calculate total
-        function updateTotal() {
-            let total = selectedAmount;
-            // Add contribution if the checkbox is checked
-            if (contributionCheckbox.checked) {
-                total += contributionAmount;
-            }
-            totalAmountDisplay.innerHTML = `Total Payable: K${total}`;
-        }
+        const sdk = new LipilaSDK("http://localhost:8000/lipila_sdk/submit_bill_collection/");
+        sdk.renderForm("lipila-form-container");
 
-        // Add event listeners to amount buttons
-        amountButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove 'selected' class from all buttons
-                amountButtons.forEach(btn => btn.classList.remove('selected'));
-                
-                // Add 'selected' class to the clicked button
-                this.classList.add('selected');
-
-                // Update selected amount
-                selectedAmount = parseInt(this.getAttribute('data-amount'));
-                
-                
-                // Uncheck the custom input when selecting a predefined amount
-                customInput.value = '';
-
-                // Update the total
-                updateTotal();
-            });
-        });
-
-        // Add event listener to custom amount input
-        customInput.addEventListener('input', function() {
-            // Remove 'selected' class from all amount buttons
-            amountButtons.forEach(btn => btn.classList.remove('selected'));
-
-            // Get the value from the custom input field
-            const customAmount = parseInt(this.value);
-            selectedAmount = customAmount > 0 ? customAmount : 0;  // Use the custom amount if it's valid
-
-            // Update the total
-            updateTotal();
-        });
-
-        // Add event listener to contribution checkbox
-        contributionCheckbox.addEventListener('change', function() {
-            // Update the total whenever the checkbox state changes
-            updateTotal();
-        });
-    });
-</script>
+        document.getElementById("lipila-form").elements["appId"].value = appId;
+        document.getElementById("lipila-form").elements["apiKey"].value = apiKey;
+    </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        var mtnButton = document.getElementById('mtn-button');
-        var airtelButton = document.getElementById('airtel-button');
-        // var visaButton = document.getElementById('visa-button');
-
-        var mtnModal = document.getElementById('mtn-modal');
-        var airtelModal = document.getElementById('airtel-modal');
-        // var visaModal = document.getElementById('visa-modal');
-
-        var closeMtnModal = document.getElementById('close-mtn-modal');
-        var closeAirtelModal = document.getElementById('close-airtel-modal');
-        // var closeVisaModal = document.getElementById('close-visa-modal');
-
-
-        mtnButton.addEventListener('click', function () {
-            mtnModal.style.display = 'flex';
-            $(".wallet_type").val("mtn");
+        var paymentButton = document.getElementById('mtn-button');
+                
+        var paymentModal = document.getElementById('payment-modal');
+        
+        var closepaymentModal = document.getElementById('close-payment-modal');
+       
+        paymentButton.addEventListener('click', function () {
+            paymentModal.style.display = 'flex';
         });
 
-        airtelButton.addEventListener('click', function () {
-            airtelModal.style.display = 'flex';
-            $(".wallet_type").val("airtel");
+        
+        closepaymentModal.addEventListener('click', function () {
+            paymentModal.style.display = 'none';
         });
-
-        // visaButton.addEventListener('click', function () {
-        //     visaModal.style.display = 'flex';
-        // });
-
-        closeMtnModal.addEventListener('click', function () {
-            mtnModal.style.display = 'none';
-        });
-
-        closeAirtelModal.addEventListener('click', function () {
-            airtelModal.style.display = 'none';
-        });
-
-        // closeVisaModal.addEventListener('click', function () {
-        //     visaModal.style.display = 'none';
-        // });
-
+        
         window.addEventListener('click', function (event) {
-            if (event.target == mtnModal) {
-                mtnModal.style.display = 'none';
+            if (event.target == paymentModal) {
+                paymentModal.style.display = 'none';
             }
-            if (event.target == airtelModal) {
-                airtelModal.style.display = 'none';
-            }
-            // if (event.target == visaModal) {
-            //     visaModal.style.display = 'none';
-            // }
-        });
-    });
-</script>
-<script>
-    // Braintree gateway
-    document.addEventListener('DOMContentLoaded', function () {
-        var button = document.querySelector('#submit-button');
-
-        var clientTokenElement = document.querySelector('#clientToken');
-        var clientToken = clientTokenElement.value;
-        var container = document.getElementById("dropin-container");
-
-        braintree.dropin.create({
-            authorization: clientToken,
-            container: container,
-            dataCollector: true
-        }, function (createErr, instance) {
-            if (createErr) {
-                // Handle error in Drop-in creation
-                return;
-            }
-            button.addEventListener('click', function () {
-                instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
-                    if (requestPaymentMethodErr) {
-                        // Handle error in requesting payment method
-                        return;
-                    }
-
-                    // Send the payload.nonce and payload.deviceData to the backend
-                    var paymentData = {
-                        nonce: payload.nonce,
-                        deviceData: payload.deviceData
-                    };
-
-                    fetch('http://localhost/checkout/visa/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCookie('csrftoken') // Include CSRF token for Django
-                        },
-                        body: JSON.stringify(paymentData)
-                    })
-                        .then(function () {
-                            window.location.assign("http://localhost:8000/dashboard/");
-
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                });
-            });
         });
     });
 </script>
